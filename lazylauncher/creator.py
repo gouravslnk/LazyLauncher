@@ -171,3 +171,51 @@ class DesktopFileCreator:
         except Exception as e:
             print(f"Error listing shortcuts: {e}")
             return []
+
+    def get_shortcut_details(self, name: str, mode: str = "user") -> dict:
+        """Get details of an existing shortcut."""
+        try:
+            filename = sanitize_filename(name) + ".desktop"
+            target_dir = self.config.get_applications_dir(mode)
+            target_path = target_dir / filename
+            
+            if not target_path.exists():
+                return {}
+            
+            details = {}
+            with open(target_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+                
+                for line in content.split('\n'):
+                    if line.startswith('Name='):
+                        details['name'] = line.split('=', 1)[1]
+                    elif line.startswith('GenericName='):
+                        details['description'] = line.split('=', 1)[1]
+                    elif line.startswith('Exec='):
+                        exec_line = line.split('=', 1)[1]
+                        # Extract URL from exec command
+                        if 'xdg-open' in exec_line:
+                            # Extract URL from xdg-open command
+                            parts = exec_line.split('"')
+                            if len(parts) >= 2:
+                                details['url'] = parts[1]
+                            details['browser_command'] = 'xdg-open'
+                        else:
+                            # Custom browser
+                            parts = exec_line.split('"')
+                            if len(parts) >= 3:
+                                details['browser_command'] = parts[0].strip()
+                                details['url'] = parts[1]
+                            elif len(parts) >= 2:
+                                details['url'] = parts[1]
+                                details['browser_command'] = 'custom'
+                    elif line.startswith('Comment='):
+                        comment = line.split('=', 1)[1]
+                        if comment.startswith('Open - '):
+                            details['description'] = comment[7:]
+                        
+            return details
+            
+        except Exception as e:
+            print(f"Error getting shortcut details: {e}")
+            return {}

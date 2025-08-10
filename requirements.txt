@@ -1,0 +1,7 @@
+# Requirements for LazyLauncher
+# All dependencies are from the Python standard library except Tkinter (usually included with Python)
+
+# Tkinter is included with most Python installations, but if not, install the appropriate package for your OS.
+# Example for Ubuntu/Debian: sudo apt-get install python3-tk
+
+# No external packages required
