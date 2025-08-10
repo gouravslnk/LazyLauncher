@@ -12,38 +12,36 @@ from typing import Optional, Union
 
 def validate_url(url: str) -> bool:
     """
-    Validate if a given String is a valid URL or File Path.
-
+    Validate if a given string is a valid URL or file path.
+    
     Args:
-        url: The URL or Path to Validate
-
+        url: The URL or path to validate
+        
     Returns:
         True if valid, False otherwise
     """
-
     if not url or not url.strip():
         return False
     
     url = url.strip()
-
-    # Check if it's a Valid HTTP/HTTPS URL
+    
+    # Check if it's a valid HTTP/HTTPS URL
     try:
         result = urllib.parse.urlparse(url)
         if result.scheme in ('http', 'https') and result.netloc:
             return True
     except Exception:
         pass
-
+    
     # Check if it's a valid file:// URL
     if url.startswith('file://'):
         try:
-            parsed = urllib.parse.urlparse(url)
-            path = urllib.parse.unquote(parsed.path)
+            path = urllib.parse.urlparse(url).path
             return os.path.exists(path)
         except Exception:
             return False
-        
-    # Check if it's a Valid Absolute Path
+    
+    # Check if it's a valid absolute path
     if os.path.isabs(url):
         return os.path.exists(url)
     
@@ -51,10 +49,18 @@ def validate_url(url: str) -> bool:
     try:
         result = urllib.parse.urlparse(url)
         if result.scheme and result.scheme not in ('http', 'https', 'file'):
-            return True # Assume Valid for other protocols
+            # Basic validation for other protocols
+            if result.scheme in ('ftp', 'ftps') and result.netloc:
+                return True
+            elif result.scheme == 'mailto' and '@' in result.path:
+                return True
+            elif result.scheme in ('tel', 'sms') and result.path:
+                return True
+            # Add more protocol validations as needed
+            return bool(result.scheme and (result.netloc or result.path))
     except Exception:
         pass
-
+    
     return False
 
 def sanitize_filename(filename: str) -> str:
@@ -206,24 +212,26 @@ def extract_domain(url: str) -> Optional[str]:
 
 def format_exec_command(browser_command: str, url: str) -> str:
     """
-    Format the Exec Command for the .desktop file.
-
+    Format the Exec command for the .desktop file.
+    
     Args:
-        browser_command: The Browser command/path
+        browser_command: The browser command/path
         url: The URL to open
         
     Returns:
-        Formatted command string
+        Properly formatted Exec command
     """
-
-    # Escape Special Characters in URL
+    # Escape special characters in URL
     escaped_url = url.replace('"', '\\"').replace("'", "\\'")
-
+    
     if browser_command == "xdg-open":
         return f"xdg-open \"{escaped_url}\""
     else:
-        # For Custom Browsers, Add the URL as an argument
-        return f"\"{browser_command}\" \"{escaped_url}\""
+        # For custom browsers, add the URL as an argument
+        # Handle spaces in browser path
+        if ' ' in browser_command and not (browser_command.startswith('"') and browser_command.endswith('"')):
+            browser_command = f'"{browser_command}"'
+        return f"{browser_command} \"{escaped_url}\""
     
 
 def validate_shortcut_name(name: str) -> tuple[bool, str]:
@@ -293,3 +301,30 @@ def get_common_browser() -> list[dict]:
             continue
 
     return available_browsers
+
+
+def validate_browser_command(command: str) -> bool:
+    """
+    Validate if a browser command is available.
+    
+    Args:
+        command: The browser command to validate
+        
+    Returns:
+        True if browser is available, False otherwise
+    """
+    if not command or not command.strip():
+        return False
+    
+    command = command.strip()
+    
+    # Default system command is always valid
+    if command == "xdg-open":
+        return True
+    
+    # Check if it's an executable path
+    if os.path.isabs(command):
+        return is_executable(command)
+    
+    # Check if command is available in PATH
+    return find_executable(command) is not None

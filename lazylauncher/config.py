@@ -96,7 +96,7 @@ StartupNotify=true
         }
     
 
-    def get_application_dir(self, mode: str = "user") -> Path:
+    def get_applications_dir(self, mode: str = "user") -> Path:
         """Get the application directory based on installation mode."""
         if mode == "system":
             return self.system_applications_dir
