@@ -6,11 +6,11 @@ pkgdesc="GUI Tool to Create Custom KRunner Shortcuts for KDE Plasma"
 arch=('any')
 url="https://github.com/gouravslnk/LazyLauncher"
 license=('MIT')
-depends=('python' 'python-tkinter' 'kservice')
+depends=('python' 'tk' 'kservice')
 optdepends=('kservice5: For KDE Plasma 5 support'
            'kservice6: For KDE Plasma 6 support')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/gouravslnk/LazyLauncher/archive/v$pkgver.tar.gz")
-sha256sums=('SKIP')  # Will be updated when you create the release
+sha256sums=('d5d9bf734b80cd5b4c149125803a59ca233d1897c11f459b27583202e1a1b97d')
 
 package() {
     cd "$srcdir/LazyLauncher-$pkgver"
