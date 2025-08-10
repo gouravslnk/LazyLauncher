@@ -1,5 +1,5 @@
 """
-LazyLancher - GUI Tool to Create Custom Shortcuts for Applications and Folder
+LazyLauncher - GUI Tool to Create Custom Shortcuts for Applications and Folder
 
 A simple GUI tool for creating custom KRunner Shortcuts in KDE Plasma.
 """

@@ -5,6 +5,8 @@ This module contains default settings and configurations for the LazyLauncher ap
 """
 
 import os
+import json
+import urllib.parse
 from pathlib import Path
 from typing import Dict, Any
 
@@ -35,13 +37,42 @@ GenericName={description}
 Exec={exec_command}
 Icon={icon}
 Type=Application
-Comment="Open - {description}"
+Comment=Open - {description}
 Categories={categories}
 StartupNotify=true
 """ 
 
-        # Common Websites Icons Mapping
-        self.site_icons = {
+        # Load site icons from JSON file
+        self.site_icons = self._load_site_icons()
+            
+        # KDE System Command Preference
+        self.kbuildsycoca_commands = [
+            'kbuildsycoca6', # KDE 6
+            'kbuildsycoca5', # KDE 5
+            'kbuildsycoca'   # Fallback
+        ]
+        
+
+    def _load_site_icons(self) -> Dict[str, str]:
+        """Load site icons from JSON file with fallback to defaults."""
+        try:
+            # Get the path to the site_icons.json file
+            assets_dir = Path(__file__).parent.parent / "assets"
+            icons_file = assets_dir / "site_icons.json"
+            
+            if icons_file.exists() and icons_file.stat().st_size > 0:
+                with open(icons_file, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                    # Ensure it's a dictionary
+                    if isinstance(data, dict):
+                        return data
+        except (json.JSONDecodeError, FileNotFoundError, PermissionError) as e:
+            print(f"Warning: Could not load site icons from JSON file: {e}")
+        except Exception as e:
+            print(f"Warning: Unexpected error loading site icons: {e}")
+        
+        # Fallback to basic hardcoded icons if JSON loading fails
+        return {
             'youtube.com': 'youtube',
             'youtu.be': 'youtube',
             'google.com': 'google',
@@ -63,15 +94,8 @@ StartupNotify=true
             'netflix.com': 'netflix',
             'spotify.com': 'spotify',
         }
-            
-        # KDE System Command Preference
-        self.kbuildsycoca_commands = [
-            'kbuildsycoca6', # KDE 6
-            'kbuildsycoca5', # KDE 5
-            'kbuildsycoca'   # Fallback
-        ]
-        
     
+
     def get_application_dir(self, mode: str = "user") -> Path:
         """Get the application directory based on installation mode."""
         if mode == "system":
@@ -82,16 +106,34 @@ StartupNotify=true
 
     def get_icon_for_url(self, url: str) -> str:
         """Get an appropriate icon for a given URL."""
+        if not url:
+            return self.default_icon
+            
         url_lower = url.lower()
 
-        # Check for known Sites
+        # Extract domain for better matching
+        try:
+            parsed = urllib.parse.urlparse(url)
+            if parsed.netloc:
+                domain = parsed.netloc.lower()
+                # Remove www. prefix if present
+                if domain.startswith('www.'):
+                    domain = domain[4:]
+                
+                # Check for exact domain match first
+                if domain in self.site_icons:
+                    return self.site_icons[domain]
+        except Exception:
+            pass
+
+        # Fallback to substring matching for known Sites
         for domain, icon in self.site_icons.items():
             if domain in url_lower:
                 return icon
             
         # Default Based on protocol/type
         if url_lower.startswith(('http://', 'https://')):
-            return 'application-internet'
+            return 'applications-internet'
         elif url_lower.startswith('file://') or os.path.isabs(url):
             return 'folder'
         elif url_lower.startswith('ftp://'):
