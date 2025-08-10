@@ -34,21 +34,16 @@ Create custom shortcuts for KDE's KRunner (Alt+F2 or ALT+SPACE) with ease:
 - **KDE Plasma** desktop environment
 - **kbuildsycoca5/6** (for KRunner integration)
 
-### Install Dependencies:
+## 📥 Installation
+
+### Arch Linux (Recommended)
 ```bash
-# Ubuntu/Debian
-sudo apt install python3 python3-tk
-
-# Fedora
-sudo dnf install python3 tkinter
-
-# Arch Linux
-sudo pacman -S python python-tkinter
+yay -S lazylauncher
+# OR
+paru -S lazylauncher
 ```
 
-## 📥 Installation & Usage
-
-### Option 1: Clone and Run
+### Manual Installation
 ```bash
 git clone https://github.com/gouravslnk/LazyLauncher.git
 cd LazyLauncher
@@ -60,35 +55,25 @@ python3 -m lazylauncher
 python3 scripts/lazylauncher_cli.py --help
 ```
 
-### Option 2: Download Release
-1. Download the latest release ZIP from [GitHub Releases](https://github.com/gouravslnk/LazyLauncher/releases)
-2. Extract and run: `python3 -m lazylauncher`
-
 ## 🎯 Quick Examples
 
 ### GUI Usage:
-1. Run: `python3 -m lazylauncher`
+1. Run: `lazylauncher` (if installed via AUR) or `python3 -m lazylauncher`
 2. **Create Tab**: Fill form to create new shortcuts
 3. **Manage Tab**: Search, update, or delete existing shortcuts
 4. Test: Press `Alt+F2` and type your shortcut name
 
 ### CLI Usage:
 ```bash
-# Create shortcuts
+# If installed via AUR:
+lazylauncher-cli create yt "https://youtube.com" -d "YouTube"
+lazylauncher-cli list
+lazylauncher-cli search youtube
+
+# If running from source:
 python3 scripts/lazylauncher_cli.py create yt "https://youtube.com" -d "YouTube"
-python3 scripts/lazylauncher_cli.py create gh "https://github.com" -d "GitHub"
-
-# List all shortcuts
 python3 scripts/lazylauncher_cli.py list
-
-# Search shortcuts
 python3 scripts/lazylauncher_cli.py search youtube
-
-# Update a shortcut
-python3 scripts/lazylauncher_cli.py update yt --description "YouTube Videos"
-
-# Remove a shortcut
-python3 scripts/lazylauncher_cli.py remove yt
 ```
 
 ## 📁 Project Structure
