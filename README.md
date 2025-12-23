@@ -12,9 +12,9 @@ Create custom shortcuts for KDE's KRunner (Alt+F2 or ALT+SPACE) with ease:
 - `g` → Opens Google Search
 - `docs` → Opens your Documents folder
 
-## ✨ Features
+##  Features
 
-### 🖥️ GUI Interface
+###  GUI Interface
 - **Tabbed interface** with Create and Manage tabs
 - **Complete CRUD operations**: Create, Update, Delete shortcuts
 - **Search functionality** to quickly find existing shortcuts
@@ -22,19 +22,19 @@ Create custom shortcuts for KDE's KRunner (Alt+F2 or ALT+SPACE) with ease:
 - **Custom browser selection** (default or manual path)
 - **Instant KRunner integration**
 
-### 💻 CLI Interface
+###  CLI Interface
 - **Full command-line interface** with comprehensive options
 - **Six main commands**: create, update, remove, list, search, show
 - **Verbose modes** and **regex search**
 - **Interactive confirmation** for destructive operations
 
-## 📋 Requirements
+##  Requirements
 
 - **Python 3.6+** (with tkinter)
 - **KDE Plasma** desktop environment
 - **kbuildsycoca5/6** (for KRunner integration)
 
-## 📥 Installation
+##  Installation
 
 ### Arch Linux (Recommended)
 ```bash
@@ -55,7 +55,7 @@ python3 -m lazylauncher
 python3 scripts/lazylauncher_cli.py --help
 ```
 
-## 🎯 Quick Examples
+##  Quick Examples
 
 ### GUI Usage:
 1. Run: `lazylauncher` (if installed via AUR) or `python3 -m lazylauncher`
@@ -98,7 +98,7 @@ LazyLauncher/
 └── LICENSE                # MIT License
 ```
 
-## 🔧 How It Works
+##  How It Works
 
 1. **User Input**: Collects shortcut details through GUI or CLI
 2. **File Generation**: Creates a `.desktop` file with proper format
@@ -106,27 +106,22 @@ LazyLauncher/
 4. **Database Update**: Runs `kbuildsycoca5/6` to refresh KRunner's cache
 5. **Ready to Use**: Shortcut immediately available in KRunner
 
-## 🐛 Troubleshooting
+##  Troubleshooting
 
 - **Tkinter import error**: Install `python3-tk` package
 - **KRunner not updating**: Ensure `kbuildsycoca5/6` is installed
 - **Shortcuts not appearing**: Try logging out and back in
 
-## 🤝 Contributing
+##  Contributing
 
 Contributions welcome! Please feel free to submit:
-- 🐛 Bug reports
-- 💡 Feature requests  
-- 🔧 Pull requests
+-  Bug reports
+-  Feature requests  
+-  Pull requests
 
-## 📄 License
+##  License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Acknowledgments
 
-- KDE Plasma team for the excellent desktop environment
-- Python community for the great development tools
-
----
 
